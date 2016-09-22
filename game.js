@@ -45,7 +45,7 @@
      */
     function gameLoop() {
         // This function for getting ship movement is given to you (at the bottom).
-        // NOTE: you will need to change these arguments to match your ship object!
+        // N O T E: you will need to change these arguments to match your ship object!
         // What does this function return? What will be in the `move` variable?
         // Read the documentation!
         var move = getShipMovement(shipsCurrentVelocity, shipsCurrentAngle);
@@ -109,6 +109,7 @@
       * @param  {HTMLElement} asteroidHit The HTML element of the hit asteroid
       * @return {void}
       */
+      
     function crash(asteroidHit) {
         document.querySelector('body').removeEventListener('keyup', handleKeys);
         asteroidHit.classList.add('hit');
