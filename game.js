@@ -1,10 +1,17 @@
 (function gameSetup() {
     'use strict';
 
+
     var shipElem = document.getElementById('ship');
 
     // Create your "ship" object and any other variables you might need...
-
+    var ship = {
+      angle: 0,
+      velocity: 0,
+      move: function() {
+        shipElem.style.transform = `rotate(${this.angle}deg)`
+      }
+    };
 
     var allAsteroids = [];
     shipElem.addEventListener('asteroidDetected', function (event) {
@@ -24,16 +31,21 @@
      * 39 = right
      * 40 = down
      *
-     * @param  {Event} event   The "keyup" event object with a bunch of data in it
+     * @param  {Event} event   The "keydown" event object with a bunch of data in it
      * @return {void}          In other words, no need to return anything
      */
     function handleKeys(event) {
         console.log(event.keyCode);
-
-        // Implement me!
-
+        switch (event.keyCode) {
+          case 37:
+            ship.angle -= 10;
+            break;
+          case 39:
+            ship.angle += 10;
+            break;
+        }
     }
-    document.querySelector('body').addEventListener('keyup', handleKeys);
+    document.querySelector('body').addEventListener('keydown', handleKeys);
 
     /**
      * This is the primary "game loop"... in traditional game development, things
@@ -48,11 +60,11 @@
         // N O T E: you will need to change these arguments to match your ship object!
         // What does this function return? What will be in the `move` variable?
         // Read the documentation!
-        var move = getShipMovement(shipsCurrentVelocity, shipsCurrentAngle);
+        var move = getShipMovement(ship.velocity, ship.angle);
 
 
         // Move the ship here!
-
+          ship.move()
 
         // Time to check for any collisions (see below)...
         checkForCollisions();
@@ -109,7 +121,7 @@
       * @param  {HTMLElement} asteroidHit The HTML element of the hit asteroid
       * @return {void}
       */
-      
+
     function crash(asteroidHit) {
         document.querySelector('body').removeEventListener('keyup', handleKeys);
         asteroidHit.classList.add('hit');
