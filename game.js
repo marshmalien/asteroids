@@ -4,12 +4,19 @@
 
     var shipElem = document.getElementById('ship');
 
+    shipElem.style.top = "200px"
+    shipElem.style.left = "200px"
     // Create your "ship" object and any other variables you might need...
     var ship = {
       angle: 0,
       velocity: 0,
-      move: function() {
-        shipElem.style.transform = `rotate(${this.angle}deg)`
+
+
+      move: function(coordinate) {
+        shipElem.style.transform = `rotate(${this.angle}deg)`,
+
+        shipElem.style.top = `${parseInt(shipElem.style.top, 10) - coordinate.top}px`,
+        shipElem.style.left = `${parseInt(shipElem.style.left, 10) + coordinate.left}px`
       }
     };
 
@@ -31,8 +38,8 @@
      * 39 = right
      * 40 = down
      *
-     * @param  {Event} event   The "keydown" event object with a bunch of data in it
-     * @return {void}          In other words, no need to return anything
+     * @ param  { Event} event   The "keydown" event object with a bunch of data in it
+     * @ return {void}          In other words, no need to return anything
      */
     function handleKeys(event) {
         console.log(event.keyCode);
@@ -43,7 +50,21 @@
           case 39:
             ship.angle += 10;
             break;
-        }
+          case 38:
+            if (ship.velocity >= 10) {
+              ship.velocity = 10;
+            } else {
+              ship.velocity += 2;
+            }
+            break;
+          case 40:
+            if (ship.velocity >= 0) {
+              ship.velocity -= 2;
+            } else {
+              ship.velocity = 0;
+            }
+            break;
+      }
     }
     document.querySelector('body').addEventListener('keydown', handleKeys);
 
@@ -53,18 +74,19 @@
      * in order to do various things. For example, this is when all game entities
      * (ships, etc) should be moved, and also when things like hit detection happen.
      *
-     * @return {void}
+     * @ return {void}
      */
+
     function gameLoop() {
         // This function for getting ship movement is given to you (at the bottom).
         // N O T E: you will need to change these arguments to match your ship object!
         // What does this function return? What will be in the `move` variable?
         // Read the documentation!
-        var move = getShipMovement(ship.velocity, ship.angle);
+        var coordinate = getShipMovement(ship.velocity, ship.angle);
 
 
         // Move the ship here!
-          ship.move()
+          ship.move(coordinate);
 
         // Time to check for any collisions (see below)...
         checkForCollisions();
@@ -135,10 +157,12 @@
      * Get the change in ship position (movement) given the current velocity
      * and angle the ship is pointing.
      *
-     * @param  {Number} velocity The current speed of the ship (no units)
-     * @param  {Number} angle    The angle the ship is pointing (no units)
+     * @param  { Number} velocity The current speed of the ship (no units)
+     * @param  { Number} angle    The angle the ship is pointing (no units)
      * @return {Object}          The amount to move the ship by with regard to left and top position (object with two properties)
      */
+
+    //  Are you sure the math is right?
     function getShipMovement(velocity, angle) {
         return {
             left: (velocity * Math.sin(angle * Math.PI / 180)),
